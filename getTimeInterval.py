@@ -72,7 +72,14 @@ def getPeriod(which, year = None, TZ = None):
         end   = dt.datetime(dt.MAXYEAR, 12, 31, 23, 59, 59, MS, tzinfo = mytz)
         start = dt.datetime(dt.MINYEAR,  1,  1,  0,  0,  0,  0, tzinfo = mytz)
     else:
-        print('getPeriod: ', which, 'not implemented')
-        start = end = None
+        try:
+            # interpret as a single date 'yyyy-mm-dd'
+            start = dt.datetime.combine(dt.datetime.strptime(which, '%Y-%m-%d').date(), \
+                                        dt.time.min)
+            end   = dt.datetime.combine(dt.datetime.strptime(which, '%Y-%m-%d').date(), \
+                                        dt.time.max)
+        except:
+            print('getPeriod: ', which, 'not implemented')
+            start = end = None
     return start, end, name
 
