@@ -64,6 +64,21 @@ def getPeriod(which, year = None, TZ = None):
             end   = dt.datetime(year = year + 1, month = 1, day = 1) - dt.timedelta(microseconds = 1)
             start =  dt.datetime(year = year, month = 1, day = 1)
         name = 'Year ' + start.strftime('%Y')
+    elif which == 'LastYear':
+        # 365(6) days
+        end   = now.replace(hour = 23, minute = 59, second = 59, microsecond = MS) - \
+             dt.timedelta(days = 1)
+        start = now.replace(year = now.year - 1, \
+                            hour = 0, minute = 0, second =0, microsecond = 0) - \
+                            dt.timedelta(days = 1)
+        #print(which, start, end)
+    elif which == 'YearByMonth':
+        # beginning of this month last year until yestarday
+        end   = now.replace(hour = 23, minute = 59, second = 59, microsecond = MS) - \
+            dt.timedelta(days = 1)
+        start = now.replace(year = now.year - 1, day = 1, \
+                            hour = 0, minute = 0, second =0, microsecond = 0)
+        #print(which, start, end)
     elif which == 'All':
         if TZ:
             mytz = tz.gettz(TZ)
