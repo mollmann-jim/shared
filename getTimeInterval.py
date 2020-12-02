@@ -35,11 +35,16 @@ def getPeriod(which, year = None, TZ = None):
         start = now.replace(hour = 0, minute = 0, second = 0, microsecond = 0) - \
             dt.timedelta(days = 7 + now.weekday())
     elif which == 'This Month':
+        year = now.year
+        month = now.month + 1
+        if month > 12:
+            year += 1
+            month = 1
         if TZ:
-            end   = dt.datetime(now.year, now.month + 1, 1, tzinfo = tz.gettz(TZ)) -\
+            end   = dt.datetime(year, month + 1, 1, tzinfo = tz.gettz(TZ)) -\
                 dt.timedelta(microseconds = 1)
         else:
-            end   = dt.datetime(now.year, now.month + 1, 1) - dt.timedelta(microseconds = 1)
+            end   = dt.datetime(year, month + 1, 1) - dt.timedelta(microseconds = 1)
         start = now.replace(day = 1, hour = 0, minute = 0, second = 0, microsecond = 0)
         name = start.strftime('%b %Y')
     elif which == 'Last Month':
@@ -48,13 +53,21 @@ def getPeriod(which, year = None, TZ = None):
                 dt.timedelta(microseconds = 1)
         else:
             end   = dt.datetime(now.year, now.month, 1) - dt.timedelta(microseconds = 1)
+        year = now.year
         month = now.month - 1
-        if month < 1: month = 12
+        if month < 1:
+            month = 12
+            year -= 1
         if TZ:
-            start = dt.datetime(now.year, month, 1, tzinfo = tz.gettz(TZ))
+            start = dt.datetime(year, month, 1, tzinfo = tz.gettz(TZ))
         else:
-            start = dt.datetime(now.year, month, 1)
-        name = start.strftime('%b %Y')  
+            start = dt.datetime(year, month, 1)
+        name = start.strftime('%b %Y')
+    elif which == 'Last30Days':
+        end   = now.replace(hour = 23, minute = 59, second = 59, microsecond = MS) - \
+            dt.timedelta(days = 1)
+        start = now.replace(hour = 0, minute = 0, second =0, microsecond = 0) - \
+            dt.timedelta(days = 30)
     elif which == 'Year':
         if TZ:
             end   = dt.datetime(year = year + 1, month = 1, day = 1, tzinfo = tz.gettz(TZ)) - \
