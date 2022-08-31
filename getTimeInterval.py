@@ -2,6 +2,20 @@
 import datetime as dt
 from dateutil.tz import tz
 
+def nextMonth(month, year):
+    month += 1
+    if month > 12:
+        year += 1
+        month = 1
+    return (month, year)
+
+def prevMonth(month, year):
+    month -= 1
+    if month < 1:
+        year -= 1
+        month = 12
+    return (month, year)
+
 def getPeriod(which, year = None, TZ = None):
     MS = 999999
     name = which
@@ -35,16 +49,12 @@ def getPeriod(which, year = None, TZ = None):
         start = now.replace(hour = 0, minute = 0, second = 0, microsecond = 0) - \
             dt.timedelta(days = 7 + now.weekday())
     elif which == 'This Month':
-        year = now.year
-        month = now.month + 1
-        if month > 12:
-            year += 1
-            month = 1
+        (nMonth, nYear) = nextMonth(now.month, now.year)
         if TZ:
-            end   = dt.datetime(year, month + 1, 1, tzinfo = tz.gettz(TZ)) -\
+            end   = dt.datetime(nYear, nMonth, 1, tzinfo = tz.gettz(TZ)) -\
                 dt.timedelta(microseconds = 1)
         else:
-            end   = dt.datetime(year, month + 1, 1) - dt.timedelta(microseconds = 1)
+            end   = dt.datetime(nYear, nMonth, 1) - dt.timedelta(microseconds = 1)
         start = now.replace(day = 1, hour = 0, minute = 0, second = 0, microsecond = 0)
         name = start.strftime('%b %Y')
     elif which == 'Last Month':
@@ -53,15 +63,11 @@ def getPeriod(which, year = None, TZ = None):
                 dt.timedelta(microseconds = 1)
         else:
             end   = dt.datetime(now.year, now.month, 1) - dt.timedelta(microseconds = 1)
-        year = now.year
-        month = now.month - 1
-        if month < 1:
-            month = 12
-            year -= 1
+        (pMonth, pYear) = prevMonth(now.month, now.year)
         if TZ:
-            start = dt.datetime(year, month, 1, tzinfo = tz.gettz(TZ))
+            start = dt.datetime(pYear, pMonth, 1, tzinfo = tz.gettz(TZ))
         else:
-            start = dt.datetime(year, month, 1)
+            start = dt.datetime(pYear, pMonth, 1)
         name = start.strftime('%b %Y')
     elif which == 'Last30Days':
         end   = now.replace(hour = 23, minute = 59, second = 59, microsecond = MS) - \
