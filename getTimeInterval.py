@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import datetime as dt
 from dateutil.tz import tz
+from dateutil.relativedelta import relativedelta
 
 def nextMonth(month, year):
     month += 1
@@ -24,7 +25,10 @@ def getPeriod(which, year = None, TZ = None):
     else:
         now   = dt.datetime.now()
     if year:
-        now = now.replace(year = year)
+        thisYear = now.year
+        deltaYears = year - thisYear
+        now = now + relativedelta(years = deltaYears)
+        #now = now.replace(year = year)
     if which == 'Today':
         end   = now.replace(hour = 23, minute = 59, second = 59, microsecond = MS)
         start = now.replace(hour = 0, minute = 0, second =0, microsecond = 0)
@@ -87,9 +91,9 @@ def getPeriod(which, year = None, TZ = None):
         # 365(6) days
         end   = now.replace(hour = 23, minute = 59, second = 59, microsecond = MS) - \
              dt.timedelta(days = 1)
-        start = now.replace(year = now.year - 1, \
-                            hour = 0, minute = 0, second =0, microsecond = 0) - \
-                            dt.timedelta(days = 1)
+        start = now.replace(hour = 0, minute = 0, second =0, microsecond = 0) - \
+                            dt.timedelta(days = 1) \
+                            - relativedelta(years = 1)
         #print(which, start, end)
     elif which == 'YearByMonth':
         # beginning of this month last year until yestarday
