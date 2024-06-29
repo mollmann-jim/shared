@@ -42,6 +42,11 @@ def getPeriod(which, year = None, TZ = None):
             dt.timedelta(days = 1)
         start = now.replace(hour = 0, minute = 0, second =0, microsecond = 0) - \
             dt.timedelta(days = 7)
+    elif which == 'Prev7daysLastYear':
+        end   = now.replace(hour = 23, minute = 59, second = 59, microsecond = MS) - \
+            dt.timedelta(days = 1) - relativedelta(years = 1)
+        start = now.replace(hour = 0, minute = 0, second =0, microsecond = 0) - \
+            dt.timedelta(days = 7) - relativedelta(years = 1)
     elif which == 'This Week':
         end   = now.replace(hour = 23, minute = 59, second = 59, microsecond = MS) - \
             dt.timedelta(days = 1)
